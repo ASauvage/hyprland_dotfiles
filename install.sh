@@ -230,6 +230,13 @@ update_user_dirs() {
     xdg-user-dirs-update
 }
 
+setup_wallpaper() {
+    echo ":: Setup wallpapers"
+    mkdir $HOME/Pictures/wallpaper
+    cp ./kath.png $HOME/Pictures/wallpaper
+    python $HOME/.config/hypr/scripts/wallpaper -I $HOME/Pictures/wallpaper/kath.png
+}
+
 misc_tasks() {
     echo ":: Misc"
     hyprctl reload
@@ -265,6 +272,7 @@ main() {
     ask_continue "Proceed with removing GTK buttons?" false && remove_gtk_buttons
     ask_continue "Proceed with setting up services?*" && setup_services
     ask_continue "Proceed with updating user directories?*" && update_user_dirs
+    ask_continue "Proceed with wallpaper setup?*" && setup_wallpaper
     ask_continue "Proceed with miscellaneous tasks?*" && misc_tasks
 
     echo "Please restart your PC"

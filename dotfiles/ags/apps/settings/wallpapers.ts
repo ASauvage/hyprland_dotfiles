@@ -107,7 +107,7 @@ const Wallpaper = (image: string, name: string) =>
 
 function CacheThumbnails() {
     Utils.execAsync(`mkdir -p ${GLib.get_home_dir()}/.cache/ags/thumbnails/wallpaper`).catch(print);
-    const original_directory = `${GLib.get_home_dir()}/wallpaper`;
+    const original_directory = `${GLib.get_home_dir()}/Pictures/wallpaper`;
     const extensions = [".jpg", ".jpeg", ".png"];
     const fileList = listFilesByExtensions(original_directory, extensions);
     fileList.forEach((value, index) => {
@@ -124,7 +124,7 @@ function CacheThumbnails() {
 CacheThumbnails();
 
 const WallpaperList = () => {
-    const original_directory = `${GLib.get_home_dir()}/wallpaper`;
+    const original_directory = `${GLib.get_home_dir()}/Pictures/wallpaper`;
     const extensions = [".jpg", ".jpeg", ".png"];
     let fileList = listFilesByExtensions(original_directory, extensions);
     let [l_fileList, r_fileList] = splitListInHalf(fileList);
@@ -174,7 +174,7 @@ export function Wallpapers() {
                 on_clicked: () => {
                     if (!changing.value) {
                         changing.setValue(true);
-                        Utils.execAsync(`python -O ${GLib.get_home_dir()}/dotfiles/hypr/scripts/wallpaper.py -R`)
+                        Utils.execAsync(`python -O ${GLib.get_home_dir()}/.config/hypr/scripts/wallpaper.py -R`)
                             .catch(print)
                             .finally(() => {
                                 changing.setValue(false);
@@ -195,7 +195,7 @@ export function Wallpapers() {
                     if (!changing.value) {
                         changing.setValue(true);
                         Utils.execAsync(
-                            `python -O ${GLib.get_home_dir()}/dotfiles/hypr/scripts/wallpaper.py -I ${focused.value}`
+                            `python -O ${GLib.get_home_dir()}/.config/hypr/scripts/wallpaper.py -I ${focused.value}`
                         )
                             .catch(print)
                             .finally(() => {

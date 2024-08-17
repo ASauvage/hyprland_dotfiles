@@ -114,12 +114,12 @@ async def main():
     wallpaper_engine = settings['wallpaper-engine']
     hyprpaper_tpl = settings['hyprpaper-tpl']
 
-    new_wallpaper = f"{HOME}/wallpapers/lake.png"
+    new_wallpaper = f"{HOME}/Pictures/wallpapers/lake.png"
 
     if random:
-        files = [f for f in os.listdir(f"{HOME}/wallpaper") if f.endswith(('.png', '.jpg', '.jpeg'))]
+        files = [f for f in os.listdir(f"{HOME}/Pictures/wallpaper") if f.endswith(('.png', '.jpg', '.jpeg'))]
         if files:
-            new_wallpaper = join(f"{HOME}/wallpaper", _random.choice(files))
+            new_wallpaper = join(f"{HOME}/Pictures/wallpaper", _random.choice(files))
     elif prev:
         try:
             with open(cache_file) as f:
