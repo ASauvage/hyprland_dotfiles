@@ -71,12 +71,18 @@ def load_categories(content: str):
 
 
 def load_sources(file: str):
+    variables = list()
     with open(file) as f:
         content = f.read()
     for line in content.split("\n"):
         line = line.replace(" = ", "=")
+
+        if line.startswith("$"):
+            variables = line.split('=')
         if not line.startswith("source="):
             continue
+        if variables[0] in line:
+            line = line.replace(variables[0], variables[1])
         file = os.path.expanduser(line.replace("source=", ""))
         if file not in files:
             files.append(file)

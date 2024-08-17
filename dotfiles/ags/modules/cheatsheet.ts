@@ -25,7 +25,9 @@ const icons = {
 const replace = {
     slash: "/",
     period: ".",
-    escape: "Esc"
+    escape: "Esc",
+    semicolon: ";",
+    colon: ":"
 };
 
 const category_icons = {

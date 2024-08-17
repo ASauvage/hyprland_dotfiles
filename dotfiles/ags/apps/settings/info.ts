@@ -6,7 +6,7 @@ type StringOrBinding = string | Binding<any, any, string> | null;
 
 const empty_func = () => {};
 
-const repo_link = "https://github.com/koeqaife/hyprland-material-you";
+const repo_link = "https://github.com/ASauvage/hyprland_dotfiles";
 const current_de = GLib.getenv("DESKTOP_SESSION");
 const author = "ASauvage";
 
