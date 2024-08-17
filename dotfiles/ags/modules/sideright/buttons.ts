@@ -2,7 +2,7 @@ import { MaterialIcon } from "icons";
 
 const { GLib } = imports.gi;
 
-const scripts_dir = `${GLib.get_home_dir()}/dotfiles/hypr/scripts`;
+const scripts_dir = `${GLib.get_home_dir()}/.config/hypr/scripts`;
 const lock_command = `${scripts_dir}/lock.sh`;
 const logout_command = `${scripts_dir}/exit.sh`;
 const shutdown_command = `${scripts_dir}/shutdown.sh`;
