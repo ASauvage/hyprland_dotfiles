@@ -45,6 +45,17 @@ preference_select() {
     fi
 }
 
+setup_yay() {
+    if command -v yay &>/dev/null; then
+        echo ":: Yay is installed"
+        sleep 1
+    else
+        echo ":: Yay is not installed!"
+        sleep 1
+        install_yay
+    fi
+}
+
 install_yay() {
     echo ":: Installing yay..."
     sudo pacman -Syu --noconfirm
@@ -55,8 +66,12 @@ install_yay() {
 }
 
 install_microtex() {
-    cd ~/dotfiles/setup/MicroTex/
+    cd ./setup/MicroTex/
     makepkg -si
+}
+
+setup_sensors() {
+    sudo sensors-detect --auto >/dev/null
 }
 
 install_packages() {
@@ -80,26 +95,11 @@ install_packages() {
         fontconfig dart-sass ttf-meslo-nerd-font-powerlevel10k cpio meson cmake \
         python-materialyoucolor-git gtksourceview3 gtksourceviewmm cairomm \
         gtkmm3 tinyxml2 python-requests python-numpy ags bun-bin bibata-cursor-theme \
-	ttf-monaco 
-}
-
-setup_yay() {
-    if command -v yay &>/dev/null; then
-        echo ":: Yay is installed"
-        sleep 1
-    else
-        echo ":: Yay is not installed!"
-        sleep 1
-        install_yay
-    fi
-}
-
-setup_sensors() {
-    sudo sensors-detect --auto >/dev/null
+	    ttf-monaco ttf-material-icons foot fish starship anyrun
 }
 
 check_config_folders() {
-    local CHECK_CONFIG_FOLDERS="ags material-colors hypr swappy"
+    local CHECK_CONFIG_FOLDERS="ags material-colors hypr swappy foot fish"
     local DATETIME=$(date '+%Y-%m-%d %H:%M:%S')
     local EXISTING="NO"
 
@@ -116,6 +116,11 @@ check_config_folders() {
     if [[ $EXISTING == "YES" ]]; then
         echo ":: Old config folder(s) backed up at ~/.backup folder"
     fi
+}
+
+install_config_folders() {
+    cp -r ./dotfiles/* $HOME/.config/
+    echo ":: New config installed"
 }
 
 install_icon_theme() {
@@ -142,13 +147,13 @@ install_icon_theme() {
             "pink" "purple" "red" "yellow" "brown")
 
         ./install.sh $COLOR_CHOICE
-        echo -e "Tela-$COLOR_CHOICE-dark\nTela-$COLOR_CHOICE-light" >$HOME/dotfiles/.settings/icon-theme
-        cd $HOME/dotfiles
+        echo -e "Tela-$COLOR_CHOICE-dark\nTela-$COLOR_CHOICE-light" >$HOME/.config/.settings/icon-theme
+        cd $HOME/.config
 
     elif [[ $CHOICE == "Papirus Icon Theme" ]]; then
         yay -S --noconfirm --needed papirus-icon-theme papirus-folders
 
-        echo -e "Papirus-Dark\nPapirus-Light" >$HOME/dotfiles/.settings/icon-theme
+        echo -e "Papirus-Dark\nPapirus-Light" >$HOME/.config/.settings/icon-theme
 
         gum style \
             --foreground 212 --border-foreground 212 --border normal \
@@ -162,44 +167,30 @@ install_icon_theme() {
 
     else
         yay -S --noconfirm --needed adwaita-icon-theme
-        echo -e "Adwaita\nAdwaita" >$HOME/dotfiles/.settings/icon-theme
+        echo -e "Adwaita\nAdwaita" >$HOME/.config/.settings/icon-theme
     fi
 }
 
 setup_colors() {
     echo ":: Setting colors"
-    python -O $HOME/dotfiles/material-colors/generate.py --color "#0000FF"
+    python -O $HOME/.config/material-colors/generate.py --color "#0000FF"
 }
 
 setup_sddm() {
     echo ":: Setting SDDM"
     sudo mkdir -p /etc/sddm.conf.d
-    sudo cp $HOME/dotfiles/sddm/sddm.conf /etc/sddm.conf.d/
-    sudo cp $HOME/dotfiles/sddm/sddm.conf /etc/
+    sudo cp ./sddm/sddm.conf /etc/sddm.conf.d/
+    sudo cp ./sddm/sddm.conf /etc/
+    sudo cp ./sddm/where_is_my_sddm_theme/ /usr/share/sddm/themes/where_is_my_sddm_theme/
     sudo chmod 777 /etc/sddm.conf.d/sddm.conf
     sudo chmod 777 /etc/sddm.conf
-    sudo chmod -R 777 /usr/share/sddm/themes/corners/
-    "$HOME"/dotfiles/sddm/scripts/wallpaper.sh
+    sudo chmod -R 777 /usr/share/sddm/themes/where_is_my_sddm_theme/
 }
 
 copy_files() {
     echo ":: Copying files"
     mkdir -p $HOME/.config
-    "$HOME"/dotfiles/setup/copy.sh
-}
-
-create_links() {
-    echo ":: Creating links"
-    ln -f $HOME/dotfiles/electron-flags.conf $HOME/.config/electron-flags.conf
-    if [ -d "$HOME/wallpaper" ]; then
-        echo ":: Error: directory wallpaper already exists in home"
-    else
-        cp -r $HOME/dotfiles/wallpapers $HOME/wallpaper
-    fi
-    ln -s $HOME/dotfiles/ags $HOME/.config/ags
-    ln -s $HOME/dotfiles/alacritty $HOME/.config/alacritty
-    ln -s $HOME/dotfiles/hypr $HOME/.config/hypr
-    ln -s $HOME/dotfiles/swappy $HOME/.config/swappy
+    "$HOME"/.config/setup/copy.sh
 }
 
 install_vencord() {
@@ -261,15 +252,15 @@ main() {
     ask_continue "Proceed with installing packages?" false && install_packages
     preference_select "file manager" "filemanager" "nautilus" "dolphin" "thunar"
     preference_select "internet browser" "browser" "brave" "firefox" "google-chrome" "chromium"
-    preference_select "terminal emulator" "terminal" "alacritty" "kitty" "konsole"
+    preference_select "terminal emulator" "terminal" "kitty" "konsole"
     ask_continue "Proceed with installing MicroTex?" false && install_microtex
     ask_continue "Proceed with setting up sensors?" false && setup_sensors
     ask_continue "Proceed with checking config folders?*" && check_config_folders
+    ask_continue "Proceed with installing config folders?*" && install_config_folders
     ask_continue "Proceed with installing icon themes?" false && install_icon_theme
     ask_continue "Proceed with setting up colors?*" && setup_colors
     ask_continue "Proceed with setting up SDDM?" false && setup_sddm
     ask_continue "Proceed with copying files?*" && copy_files
-    ask_continue "Proceed with creating links?*" && create_links
     ask_continue "Proceed with installing Vencord?" false && install_vencord
     ask_continue "Proceed with removing GTK buttons?" false && remove_gtk_buttons
     ask_continue "Proceed with setting up services?*" && setup_services
