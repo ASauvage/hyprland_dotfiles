@@ -37,7 +37,7 @@ export const update_scheme = async (scheme: string) => {
 };
 
 let theme_reload_lock = false;
-const color_generator = `${GLib.get_home_dir()}/dotfiles/material-colors/generate.py`;
+const color_generator = `${GLib.get_home_dir()}/.config/material-colors/generate.py`;
 
 function isNumeric(str: string) {
     return !isNaN(Number(str)) && isFinite(Number(str));

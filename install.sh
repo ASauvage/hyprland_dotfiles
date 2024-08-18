@@ -38,7 +38,7 @@ preference_select() {
     if [[ $CHOICE != "NONE" ]]; then
         yay -Syu --noconfirm --needed
         yay -S --noconfirm --needed $CHOICE
-        python -O "$HOME"/dotfiles/ags/scripts/apps.py --"$app_type" $CHOICE
+        python -O "$HOME"/.config/ags/scripts/apps.py --"$app_type" $CHOICE
     else
         echo "Not installing a(n) $type..."
         sleep .4
