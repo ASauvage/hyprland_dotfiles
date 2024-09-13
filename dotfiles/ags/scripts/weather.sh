@@ -17,7 +17,7 @@ get_weather_data() {
         cached_key=$(cat "$cache_file" | jq -r '.cache_key')
         last_modified=$(stat -c %Y "$cache_file")
 
-        if [[ "$cached_key" == "$cache_key" && $((current_time - last_modified)) < $cache_max_age ]]; then
+        if [[ "$cached_key" == "$cache_key" && $((current_time - last_modified)) -eq $cache_max_age ]]; then
             cat "$cache_file" | jq -r '.data'
             return
         fi

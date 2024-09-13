@@ -170,7 +170,6 @@ function WeatherSecondCard(weather: WeatherJson) {
                 hpack: "start"
             }),
             _Label("Speed:", `${weather.wind.speed} m/s`),
-            _Label("Gust:", `${weather.wind.gust} m/s`),
             _Label("Degrees:", `${weather.wind.deg}°`)
         ]
     });
@@ -185,6 +184,7 @@ export function WeatherBox() {
         setup: (self) => {
             self.hook(weather, () => {
                 const cur_weather = weather.value;
+                const thedate = new Date(cur_weather.dt*1000)
                 if (cur_weather["no_data"]) {
                     self.children = [
                         Widget.Box({
@@ -197,11 +197,24 @@ export function WeatherBox() {
                         })
                     ];
                 } else {
-                    const title = Widget.Label({
-                        class_name: "main_title",
-                        label: cur_weather.name,
-                        hpack: "start"
-                    });
+                    const title = Widget.Box({
+                        class_name: "location box",
+                        hexpand: true,
+                        children: [
+                            Widget.Label({
+                                class_name: "main_title",
+                                label: cur_weather.name,
+                                hpack: "start"
+                            }),
+                            Widget.Label({
+                                class_name: "label",
+                                label: thedate.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+                                hpack: "end",
+                                css: 'opacity: 0.33; font-size: 90%; margin-left: 20px'
+                            })
+                        ]
+                    })
+                    
                     self.children = [title, WeatherFirstCard(cur_weather), WeatherSecondCard(cur_weather)];
                 }
             });
