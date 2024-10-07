@@ -100,14 +100,14 @@ function getIconNameFromClass(windowClass: string) {
 const dispatch = (ws: string) => hyprland.messageAsync(`dispatch workspace ${ws}`).catch(print);
 
 function Workspaces() {
-    let workspace_buttons = new Map<Number, any>();
+    let workspace_buttons = new Map<Number, ReturnType<typeof createWorkspaceButton>>();
     const workspace_buttons_array: VariableType<Button<any, any>[] | any> = Variable([]);
 
     function createWorkspaceButton(id: Number) {
         return Widget.Button({
             on_clicked: () => dispatch(`${id}`),
             child: Widget.Label(`${id}`),
-            attribute: { id: id },
+            attribute: { id: id, map: false },
             class_name: "workspace"
         });
     }
@@ -122,6 +122,17 @@ function Workspaces() {
     function update() {
         workspace_buttons.forEach((workspace) => {
             const existingWorkspace = hyprland.workspaces.some((element) => element.id === workspace.attribute.id);
+            if (config.config.hide_empty_workspaces) {
+                if (!workspace.attribute.map) {
+                    let mapSignalId = workspace.connect("map", () => {
+                        workspace.set_visible(existingWorkspace);
+                        workspace.disconnect(mapSignalId);
+                    });
+                    workspace.attribute.map = true;
+                } else workspace.set_visible(existingWorkspace);
+            } else {
+                workspace.set_visible(true);
+            }
             workspace.toggleClassName("exists", existingWorkspace);
         });
     }
@@ -132,9 +143,6 @@ function Workspaces() {
         });
     }
 
-    initializeWorkspaceButtons();
-    activeWorkspace();
-    update();
     hyprland.connect("notify::workspaces", () => {
         activeWorkspace();
         update();
@@ -142,6 +150,11 @@ function Workspaces() {
     hyprland.connect("notify::active", () => {
         activeWorkspace();
     });
+    config.connect("notify::config", () => update());
+
+    initializeWorkspaceButtons();
+    activeWorkspace();
+    update();
 
     return Widget.EventBox({
         on_scroll_up: () => dispatch("+1"),
@@ -499,7 +512,7 @@ function Left() {
     // @ts-expect-error
     return Widget.Box({
         // margin_left: 15,
-        class_name: "modules-left",
+        class_name: "modules_left",
         hpack: "start",
         spacing: 8,
         children: [AppLauncher(), OpenSideLeft(), MediaPlayer(), TaskBar()]
@@ -508,7 +521,7 @@ function Left() {
 
 function Center() {
     return Widget.Box({
-        class_name: "modules-center",
+        class_name: "modules_center",
         hpack: "center",
         spacing: 8,
         children: [Workspaces()]
@@ -518,7 +531,7 @@ function Center() {
 function Right() {
     return Widget.Box({
         // margin_right: 15,
-        class_name: "modules-right",
+        class_name: "modules_right",
         hpack: "end",
         spacing: 8,
         children: [KeyboardLayout(), BatteryLabel(), SysTray(), Applets(), Clock(), OpenSideBar()]
