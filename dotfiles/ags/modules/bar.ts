@@ -270,7 +270,7 @@ function SysTray() {
                     if (!item.id) return undefined;
                     if (item.id.trim() != "nm-applet" && item.id.trim() != "blueman") {
                         return Widget.Button({
-                            child: Widget.Icon({ icon: item.bind("icon") }),
+                            child: Widget.Icon({ icon: item.bind("icon"), size: 16 }),
                             on_primary_click_release: (_, event) => item.activate(event),
                             on_secondary_click_release: (_, event) => item.openMenu(event),
                             tooltip_markup: item.bind("tooltip_markup")
@@ -292,7 +292,13 @@ function AppLauncher() {
         on_clicked: () => {
             toggleAppsWindow();
         },
-        child: MaterialIcon("search")
+        child: MaterialIcon("search"),
+        setup: (self) => {
+            self.hook(config, () => {
+                if (config.config.hide_applauncher_button != !self.is_visible())
+                    self.set_visible(!config.config.hide_applauncher_button);
+            });
+        }
     });
 
     return button;
@@ -353,7 +359,9 @@ function Bluetooth() {
         },
         child: MaterialIcon("bluetooth_disabled", "16px")
     }).hook(bluetooth, (self) => {
-        if (bluetooth.enabled) {
+        if (bluetooth.connected_devices.length > 0) {
+            self.child.label = "bluetooth_connected";
+        } else if (bluetooth.enabled) {
             self.child.label = "bluetooth";
         } else {
             self.child.label = "bluetooth_disabled";
@@ -374,14 +382,21 @@ function MediaPlayer() {
         child: MaterialIcon("play_circle"),
         visible: false,
         tooltip_text: "Unknown"
-    }).hook(mpris, (self) => {
+    })
+    .hook(mpris, (self) => {
         if (mpris.players.length > 0) {
-            self.visible = true;
+            self.visible = !config.config.hide_media_button && true;
             metadata = mpris.players[0]?.metadata;
             if (metadata) self.tooltip_text = `${metadata["xesam:artist"]} - ${metadata["xesam:title"]}`;
         } else {
             self.visible = false;
             self.tooltip_text = "Unknown";
+        }
+    })
+    .hook(config, (self) => {
+        if (mpris.players.length > 0) {
+            if (config.config.hide_media_button != !self.is_visible())
+                self.set_visible(!config.config.hide_media_button);
         }
     });
 
@@ -421,13 +436,20 @@ function TaskBar() {
     let globalWidgets: Button<Icon<any>, any>[] = [];
 
     function Clients(clients: Client[]) {
-        const currentClientIds = clients.map((client) => client.pid);
-        globalWidgets = globalWidgets.filter((widget) => currentClientIds.includes(widget.attribute.pid));
+        const currentClientIds = clients.map((client) => client.address);
+        globalWidgets = globalWidgets.filter((widget) => currentClientIds.includes(widget.attribute.client.address));
+
+        globalWidgets.sort((a, b) => {
+            if (a.attribute.pid == b.attribute.pid) {
+                return a.attribute.workspace - b.attribute.workspace;
+            }
+            return a.attribute.pid - b.attribute.pid;
+        });
 
         clients.forEach((client) => {
             if (client.class === "Alacritty") return;
 
-            let widget = globalWidgets.find((w) => w.attribute.pid === client.pid);
+            let widget = globalWidgets.find((w) => w.attribute.client.address === client.address);
             if (widget) {
                 widget.tooltip_markup = client.title;
             } else {
@@ -444,8 +466,12 @@ function TaskBar() {
                 }
 
                 widget = Widget.Button({
-                    attribute: { pid: client.pid },
-                    child: Widget.Icon({ icon }),
+                    attribute: {
+                        client: client,
+                        workspace: client.workspace,
+                        pid: client.pid
+                    },
+                    child: Widget.Icon({ icon, size: 16 }),
                     tooltip_markup: client.title,
                     on_clicked: () => focus(client)
                 });
@@ -467,7 +493,7 @@ function TaskBar() {
     });
 }
 
-function volumeIndicator() {
+function VolumeIndicator() {
     return Widget.EventBox({
         on_scroll_up: () => (audio.speaker.volume += 0.01),
         on_scroll_down: () => (audio.speaker.volume -= 0.01),
@@ -493,11 +519,24 @@ function volumeIndicator() {
     });
 }
 
+const OpenClipHist = () =>
+    Widget.Button({
+        class_name: "bar_cliphist",
+        on_clicked: (self) => App.toggleWindow("cliphist"),
+        child: MaterialIcon("content_paste", "16px"),
+        visible: !config.config.hide_cliphist_button,
+        setup: (self) => {
+            self.hook(config, () => {
+                self.set_visible(!config.config.hide_cliphist_button);
+            });
+        }
+    });
+
 const Applets = () =>
     Widget.Box({
         class_name: "bar_applets",
         spacing: 5,
-        children: [volumeIndicator(), Bluetooth(), Wifi()]
+        children: [VolumeIndicator(), Bluetooth(), Wifi(), OpenClipHist()]
     });
 
 const Dot = () =>
@@ -509,22 +548,27 @@ const Dot = () =>
     });
 
 function Left() {
+    const workspaces = config.config.workspaces_to_the_left ? Workspaces() : undefined;
+
     // @ts-expect-error
     return Widget.Box({
         // margin_left: 15,
         class_name: "modules_left",
         hpack: "start",
         spacing: 8,
-        children: [AppLauncher(), OpenSideLeft(), MediaPlayer(), TaskBar()]
+        children: [AppLauncher(), OpenSideLeft(), MediaPlayer(),workspaces, TaskBar()]
     });
 }
 
 function Center() {
+    const workspaces = !config.config.workspaces_to_the_left ? Workspaces() : undefined;
+
+    // @ts-expect-error
     return Widget.Box({
         class_name: "modules_center",
         hpack: "center",
         spacing: 8,
-        children: [Workspaces()]
+        children: [workspaces]
     });
 }
 

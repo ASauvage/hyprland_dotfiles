@@ -161,6 +161,7 @@ const NotificationReveal = (notification: NotificationType, visible = false, dis
     let box: Box<any, BoxAttrs>;
 
     const destroyWithAnims = () => {
+        if (box.attribute.destroying) return;
         box.attribute.destroying = true;
         secondRevealer.reveal_child = false;
         timeout(transition_duration, () => {
@@ -230,13 +231,17 @@ export function NotificationPopups(
             current.toggleClassName("first", is_first);
             current.toggleClassName("middle", !is_first && !is_last);
         }
+        list.notify("children");
     }
 
     function onNotified(_: any, id: number) {
         const n = notifications.getNotification(id);
         if (notifications.dnd || !n) return;
-        if (exclude.includes(n.app_name.trim())) return;
-        if (!include.includes(n.app_name.trim()) && include.length > 0) return;
+
+        const appName = n.app_name.trim().toLowerCase();
+        if (exclude.some((excludedApp) => appName.includes(excludedApp.toLowerCase()))) return;
+        if (!include.some((includedApp) => appName.includes(includedApp.toLowerCase())) && include.length > 0) return;
+        
         const original = list.children.find((n) => n.attribute.id === id);
         const replace = original?.attribute.id;
         let notification;

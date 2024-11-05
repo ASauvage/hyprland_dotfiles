@@ -3,6 +3,7 @@ import { SystemBox } from "./system.ts";
 let shown = Variable("Messages");
 import Gtk from "gi://Gtk?version=3.0";
 import { MaterialIcon } from "icons.ts";
+import config from "services/configuration.ts";
 
 type ButtonType = {
     page: string;
@@ -41,7 +42,14 @@ function Button({ page, label, icon }: ButtonType) {
 }
 
 export function Navigation() {
-    const messages_apps = ["discord", "materialgram", "Telegram Desktop"];
+    const messages_apps = [
+        "discord",
+        "materialgram",
+        "telegram",
+        "ayugram",
+        "whatsapp",
+        ...config.config.messages_notifications_filter
+    ];
     let stack = Widget.Stack({
         children: {
             Messages: NotificationsBox({ include: messages_apps }),

@@ -6,6 +6,7 @@ import { Media } from "./players.ts";
 import { Applauncher } from "./applauncher.ts";
 import { geminiPage } from "./gemini.ts";
 import { chatsPage } from "./chats.ts";
+import config from "services/configuration";
 
 export const WINDOW_NAME = "sideleft";
 export const shown = Variable("weather");
@@ -13,15 +14,15 @@ export const shown = Variable("weather");
 export function toggleAppsWindow() {
     if (shown.value == "apps" && sideleft.visible) App.closeWindow(WINDOW_NAME);
     else {
-        App.openWindow(WINDOW_NAME);
         shown.setValue("apps");
+        App.openWindow(WINDOW_NAME);
     }
 }
 export function toggleMediaWindow() {
     if (shown.value == "media" && sideleft.visible) App.closeWindow(WINDOW_NAME);
     else {
-        App.openWindow(WINDOW_NAME);
         shown.setValue("media");
+        App.openWindow(WINDOW_NAME);
     }
 }
 
@@ -77,7 +78,7 @@ function Navigation() {
             media: Media(),
             apps: Applauncher(),
             gemini: geminiPage,
-            chats: chatsPage
+            chats: config.config.show_beta ? chatsPage : Widget.Label("Beta functions disabled")
         },
         hexpand: true,
         transition: "crossfade",
@@ -114,14 +115,18 @@ function Navigation() {
                     size: 20,
                     class_name: "icon"
                 })
-            }),
+            })
+        ]
+    });
+    if (config.config.show_beta) {
+        buttons.add(
             Button({
                 page: "chats",
                 label: "Chat",
                 icon: "chat"
             })
-        ]
-    });
+        );
+    }
     return Widget.Box({
         vexpand: true,
         class_name: "sideleft",
