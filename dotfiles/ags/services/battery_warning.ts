@@ -3,7 +3,7 @@ const battery = await Service.import("battery");
 const battery_messages = {
     warnLevels: [15, 5, 1],
     warnTitles: ["Low battery", "Very low battery", "Critical Battery"],
-    warnMessages: ["Plug in the charger", "I beg you, plug in the charger", "Your PC is about to shut down"]
+    warnMessages: ["Plug in the charger", "I beg you, plug in the charger", "This is just a goodbye 🫡"]
 };
 
 let last_warning = 101;
