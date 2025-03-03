@@ -10,8 +10,8 @@ add_newline = false
 # $character
 # """
 format = """
-$cmd_duration$directory $git_branch
-$python$character
+$cmd_duration$directory $git_branch$python$nodejs$rust
+$character
 """
 
 # Replace the "❯" symbol in the prompt with "➜"
@@ -23,18 +23,30 @@ error_symbol = "[• 󰅙](bold fg:red) "
 [package]
 disabled = true
 
-# Display python virtual env name
 [python]
+style = "fg:blue"
 symbol = ""
+version_format = "v${major}.${minor}"
 detect_folders = ['.venv', 'venv']
-format = "([$symbol $virtualenv ](fg:yellow))"
+format = '• [](bold $style)[$symbol (${version}) (\($virtualenv\))](fg:black bg:blue)[ ](bold $style)'
+
+[nodejs]
+style = "fg:blue"
+symbol = "󰎙"
+version_format = "v${major}.${minor}"
+format =  '• [](bold $style)[$symbol (${version})](fg:black bg:blue)[ ](bold $style)'
+
+[rust]
+style = "fg:blue"
+symbol = "󱘗"
+format = '• [](bold $style)[$symbol (${version})](fg:black bg:blue)[ ](bold $style)'
 
 [git_branch]
-style = "bg: green"
+style = "fg:green"
 symbol = "󰘬"
-truncation_length = 12
+truncation_length = 32
 truncation_symbol = ""
-format = "• [](bold fg:green)[$symbol $branch(:$remote_branch)](fg:black bg:green)[ ](bold fg:green)"
+format = '• [](bold $style)[$symbol $branch(:$remote_branch)](fg:black bg:green)[ ](bold $style)'
 
 [git_commit]
 commit_hash_length = 4
@@ -91,7 +103,6 @@ truncation_length = 6
 truncation_symbol = "••/"
 format = '[](bold fg:green)[$path ]($style)[](bold fg:green)'
 
-
 [directory.substitutions]
 "Desktop" = "  "
 "Documents" = "  "
@@ -99,6 +110,7 @@ format = '[](bold fg:green)[$path ]($style)[](bold fg:green)'
 "Music" = " 󰎈 "
 "Pictures" = "  "
 "Videos" = "  "
+"/run/media/alex/DATA" = "  "
 
 [cmd_duration]
 min_time = 0
