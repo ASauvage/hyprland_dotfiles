@@ -10,8 +10,8 @@ alias documents='cd ~/Documents'
 alias pictures='cd ~/Pictures'
 alias music='cd ~/Music'
 alias videos='cd ~/Videos'
-alias data='cd /run/media/$USER/DATA'
-alias repos='cd /run/media/$USER/DATA/repositories'
+alias data='cd /run/media/alex/DATA'
+alias repos='cd /run/media/alex/DATA/repositories'
 
 alias hyprbinds='vim ~/.config/hypr/hyprland/bind.conf'
 
@@ -26,10 +26,15 @@ alias l='ls -CF'
 
 alias rm='rm -i'
 
+alias bt='~/.config/hypr/scripts/bluetooth.sh'
+
+alias pacremove='sudo pacman -Runs'
+
 # Python
 alias py='python3'
-alias venv='python3 -m venv .venv --upgrade-deps && echo .venv created'
-alias requirements='python3 -m pipreqs.pipreqs'
+alias createvenv='python3 -m venv .venv --upgrade-deps && echo .venv created'
+alias requirements='pip install -r requirements.*{txt, pip}'
+# alias requirements='python3 -m pipreqs.pipreqs'
 
 # Git
 
@@ -37,3 +42,9 @@ alias requirements='python3 -m pipreqs.pipreqs'
 # QoL
 alias grep='grep --color=auto'
 alias mongostart='sudo systemctl start mongodb.service'
+alias mongostop='sudo systemctl stop mongodb.service'
+alias toudoux='py /run/media/alex/DATA/repositories/toudoux/toudoux.py'
+
+# Other
+alias pokemmo='bash /run/media/alex/DATA/PokeMMO-Client/PokeMMO.sh'
+
