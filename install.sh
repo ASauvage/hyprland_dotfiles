@@ -95,7 +95,8 @@ install_packages() {
         fontconfig dart-sass ttf-meslo-nerd-font-powerlevel10k cpio meson cmake \
         python-materialyoucolor-git gtksourceview3 gtksourceviewmm cairomm \
         gtkmm3 tinyxml2 python-requests python-numpy ags bun-bin bibata-cursor-theme \
-	    ttf-monaco ttf-material-icons foot fish starship anyrun ttf-nerd-fonts-symbols-common
+	    ttf-monaco ttf-material-icons foot fish starship anyrun ttf-nerd-fonts-symbols-common \
+        hyprshot hyprpicker wl-gammarelay-rs
 }
 
 check_config_folders() {
