@@ -13,12 +13,10 @@ if ! command -v gum &>/dev/null; then
 fi
 
 ask_continue() {
-    local message=$1
-    local exit_on_no=${2:-true}
-    if gum confirm "$message"; then
+    if gum confirm "$1"; then
         return 0
     else
-        echo ":: Skipping $message."
+        echo ":: Skipping $1."
         return 1
     fi
 }
@@ -32,3 +30,5 @@ ask_continue "Proceed with installing packages?" false && ./scripts/pkgs.sh
 ask_continue "Proceed with installing dotfiles?" false && ./scripts/dotfiles.sh
 ask_continue "Proceed with configuring disks?" false && ./scripts/disks.sh
 ask_continue "Proceed with configuring git?" false && ./scripts/git.sh
+
+echo ":: All done! Please reboot your system."
