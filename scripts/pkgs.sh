@@ -7,14 +7,14 @@ PACKAGES=(
     "anydesk"
     "aylurs-gtk-shell-git"
     "bluez"
-    "bluez"-utils
-    "dart"-sass
+    "bluez-utils"
+    "dart-sass"
     "deluge"
     "fish"
     "foot"
-    "gnome"-calculator
-    "gnome"-disk-utility
-    "gnome"-text-editor
+    "gnome-calculator"
+    "gnome-disk-utility"
+    "gnome-text-editor"
     "gvfs"
     "hypridle"
     "hyprpanel"
@@ -25,21 +25,23 @@ PACKAGES=(
     "less"
     "libgtop"
     "melonDS"
-    "mongodb"-compass-bin
+    "mongodb-compass-bin"
     "networkmanager"
     "postman"
     "rofi"
-    "rofi"-calc
-    "rofi"-emoji
-    "rofi"-tools
+    "rofi-calc"
+    "rofi-emoji"
+    "rofi-tools"
     "swww"
     "upower"
     "wev"
-    "wf"-recorder
+    "wf-recorder"
     "wireplumber"
     "wl-clipboard"
     "vlc"
 )
+
+SEL_PACKAGES=$(gum choose --no-limit --header "Packages to be installed" --height 20 --selected "*" ${PACKAGES[@]})
 
 if command -v yay &>/dev/null; then
     echo ":: yay is already installed"
@@ -53,11 +55,6 @@ else
 
     echo ":: yay installation complete"
 
-# print packages
-gum pager "THE FOLOWING PACKAGES WILL BE INSTALLED::
- 
-$(printf '%s\n' "${PACKAGES[@]}")"
-
 echo ":: packages installation using yay"
-yay -S --needed --noconfirm "${PACKAGES[@]}"
+yay -S --needed --noconfirm "${SEL_PACKAGES[@]}"
 echo ":: packages installed successfully"
