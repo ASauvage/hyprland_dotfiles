@@ -3,7 +3,7 @@
 # mount disk using fstab
 
 echo ":: Fetching disks"
-DISK=gum choose --no-limit --header "Found disks" $(lsblk -o NAME,SIZE,TYPE,MOUNTPOINT | grep disk | awk '{print $1}')
+DISK=$(gum choose --no-limit --header "Found disks" $(lsblk -o NAME,SIZE,TYPE,MOUNTPOINT | grep disk | awk '{print $1}'))
 
 for i in $DISK; do
     if gum confirm "Proceed to mount disk $(gum style --foreground 212 $i)?"; then
