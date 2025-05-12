@@ -12,8 +12,6 @@ if ! command -v gum &>/dev/null; then
     sudo pacman -S gum
 fi
 
-gum style --height 1 --width 50 --padding '0 12' --border double --border-foreground 57 "Hyprland dotfiles for $(gum style --foreground 212 "Arch")"
-
 ask_continue() {
     local message=$1
     local exit_on_no=${2:-true}
@@ -21,16 +19,16 @@ ask_continue() {
         return 0
     else
         echo ":: Skipping $message."
-        if $exit_on_no; then
-            echo ":: Exiting script."
-            exit 0
-        else
-            return 1
-        fi
+        return 1
     fi
 }
 
 # Script
-ask_continue "You are about to install Hyprland dotfiles. Proceed?" true
+gum style --height 1 --width 50 --padding '0 12' --border double --border-foreground 57 "Hyprland dotfiles for $(gum style --foreground 212 "Arch")"
+
+ask_continue "Proceed with installing Hyprland Dotfiles?" true || exit 0
+
 ask_continue "Proceed with installing packages?" false && ./scripts/pkgs.sh
 ask_continue "Proceed with installing dotfiles?" false && ./scripts/dotfiles.sh
+ask_continue "Proceed with configuring disks?" false && ./scripts/disks.sh
+ask_continue "Proceed with configuring git?" false && ./scripts/git.sh
