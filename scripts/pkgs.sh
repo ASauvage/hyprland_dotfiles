@@ -22,6 +22,7 @@ PACKAGES=(
     "hyprshot"
     "hyprsunset"
     "hyprutils"
+    "less"
     "libgtop"
     "melonDS"
     "mongodb"-compass-bin
@@ -41,7 +42,7 @@ PACKAGES=(
 )
 
 if command -v yay &>/dev/null; then
-    echo ":: yay is installed"
+    echo ":: yay is already installed"
     sleep 1
 else
     echo ":: yay installation"
