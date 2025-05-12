@@ -31,5 +31,6 @@ ask_continue() {
 }
 
 # Script
+ask_continue "You are about to install Hyprland dotfiles. Proceed?" true
 ask_continue "Proceed with installing packages?" false && ./scripts/pkgs.sh
 ask_continue "Proceed with installing dotfiles?" false && ./scripts/dotfiles.sh

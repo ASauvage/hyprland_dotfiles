@@ -3,31 +3,43 @@
 # This script installs packages using yay.
 
 PACKAGES=(
-    "hyprpanel"
-    "hypridle"
-    "hyprshot"
-    "hyprpicker"
-    "hyprutils"
     "adwaita-icon-theme"
-    "rofi"
-    "rofi-emoji"
-    "rofi-calc"
-    "rofi-tools"
+    "anydesk"
+    "aylurs-gtk-shell-git"
+    "bluez"
+    "bluez"-utils
+    "dart"-sass
+    "deluge"
     "fish"
     "foot"
-    "wev"
-    "swww"
-    "deluge"
-    "vlc"
-    "anydesk"
-    "postman"
-    "mongodb-compass-bin"
+    "gnome"-calculator
+    "gnome"-disk-utility
+    "gnome"-text-editor
+    "gvfs"
+    "hypridle"
+    "hyprpanel"
+    "hyprpicker"
+    "hyprshot"
+    "hyprsunset"
+    "hyprutils"
+    "libgtop"
     "melonDS"
-    "wf-recorder"
-    "gnome-calculator"
-    "gnome-text-editor"
-    "gnome-disk-utility"
+    "mongodb"-compass-bin
+    "networkmanager"
+    "postman"
+    "rofi"
+    "rofi"-calc
+    "rofi"-emoji
+    "rofi"-tools
+    "swww"
+    "upower"
+    "wev"
+    "wf"-recorder
+    "wireplumber"
+    "wl-clipboard"
+    "vlc"
 )
+
 
 if command -v yay &>/dev/null; then
     echo ":: yay is installed"
