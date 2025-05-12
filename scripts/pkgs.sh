@@ -40,7 +40,6 @@ PACKAGES=(
     "vlc"
 )
 
-
 if command -v yay &>/dev/null; then
     echo ":: yay is installed"
     sleep 1
@@ -53,9 +52,11 @@ else
 
     echo ":: yay installation complete"
 
+# print packages
+gum pager "THE FOLOWING PACKAGES WILL BE INSTALLED::
+ 
+$(printf '%s\n' "${PACKAGES[@]}")"
 
 echo ":: packages installation using yay"
-
 yay -S --needed --noconfirm "${PACKAGES[@]}"
-
 echo ":: packages installed successfully"
