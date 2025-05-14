@@ -24,11 +24,12 @@ ask_continue() {
 # Script
 gum style --height 1 --width 50 --padding '0 12' --border double --border-foreground 57 "Hyprland dotfiles for $(gum style --foreground 212 "Arch")"
 
-ask_continue "Proceed with installing Hyprland Dotfiles?" true || exit 0
+ask_continue "Proceed with installing Hyprland Dotfiles?" || exit 0
 
-ask_continue "Proceed with installing packages?" false && ./scripts/pkgs.sh
-ask_continue "Proceed with installing dotfiles?" false && ./scripts/dotfiles.sh
-ask_continue "Proceed with configuring disks?" false && ./scripts/disks.sh
-ask_continue "Proceed with configuring git?" false && ./scripts/git.sh
+ask_continue "Proceed with installing packages?" && ./scripts/pkgs.sh
+ask_continue "Proceed with installing dotfiles?" && ./scripts/dotfiles.sh
+ask_continue "Proceed with configuring disks?" && ./scripts/disks.sh
+ask_continue "Proceed with configuring git?" && ./scripts/git.sh
+ask_continue "Proceed with configuring wallpapers?" && ./scripts/wallpapers.sh
 
 echo ":: All done! Please reboot your system."
