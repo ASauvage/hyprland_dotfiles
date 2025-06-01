@@ -28,7 +28,7 @@ PACKAGES=(
     "mongodb-compass-bin"
     "networkmanager"
     "postman"
-    "rofi"
+    "rofi-wayland"
     "rofi-calc"
     "rofi-emoji"
     "rofi-tools"
