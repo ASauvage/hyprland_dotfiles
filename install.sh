@@ -30,8 +30,10 @@ echo ":: repository downloaded"
 
 ask_continue "Proceed with installing packages?" && ./scripts/pkgs.sh
 ask_continue "Proceed with installing dotfiles?" && ./scripts/dotfiles.sh
+ask_continue "Proceed with installing bin files?" && ./scripts/bin.sh
 ask_continue "Proceed with configuring disks?" && ./scripts/disks.sh
 ask_continue "Proceed with configuring git?" && ./scripts/git.sh
 ask_continue "Proceed with configuring wallpapers?" && ./scripts/wallpapers.sh
 
 echo ":: All done! Please reboot your system"
+echo ":: Proceed with rebooting?" && systemctl reboot
