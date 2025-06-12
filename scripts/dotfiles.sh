@@ -12,5 +12,5 @@ if [ -d "$HOME/.config" ]; then
     fi
 fi
 
-mv -rf ./dotfiles/* "$HOME"/
+cp -rf ./dotfiles/* "$HOME"/
 echo ":: New config installed"
